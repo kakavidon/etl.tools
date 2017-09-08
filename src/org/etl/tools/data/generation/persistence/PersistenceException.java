@@ -1,5 +1,11 @@
 package org.etl.tools.data.generation.persistence;
-
+/**
+ * 
+ * A checked exception that is thrown when persistence operation fails.
+ * 
+ * @author Lachezar.Nedelchev
+ *
+ */
 public class PersistenceException extends Exception {
 
 	private static final long serialVersionUID = 1L;

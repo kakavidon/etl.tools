@@ -15,13 +15,11 @@ public interface PersistenceProvider<T> {
 	 * 
 	 * Reads a object of type T to a file.
 	 * 
-	 * @param type
-	 *            The type of the object
 	 * @return An object of a type T if successfully read.
 	 * @throws PersistenceException
-	 *             when reading fails.
+	 *             When reading fails.
 	 */
-	public T read(Class<T> type) throws PersistenceException;
+	public T read() throws PersistenceException;
 
 	/**
 	 * 

@@ -6,32 +6,46 @@ import java.util.Objects;
 
 import org.etl.tools.data.generation.settings.Settings;
 
-
-
+/**
+ * 
+ * Factory class capable to produce new instance of PersistenceProviders.
+ * 
+ * @author Lachezar.Nedelchev
+ *
+ */
 public final class PersistenceFactory {
 	private PersistenceFactory() {
 	}
 
+	/**
+	 * Enum that exposes the available PersistenceProviders
+	 * 
+	 * @author Lachezar.Nedelchev
+	 *
+	 */
 	public static enum PersistenceType {
 		JSON(JSON_FORMAT), YAML(YAML_FORMAT);
 
-		private final FormatBuilder formatConstructor;
+		private final PersistenceFormat format;
 
-		private PersistenceType(FormatBuilder formatConstructor) {
-			this.formatConstructor = formatConstructor;
+		private PersistenceType(PersistenceFormat format) {
+			this.format = format;
 		}
 
-		public FormatBuilder getFormatConstructor() {
-			return formatConstructor;
+		public PersistenceFormat getFormatConstructor() {
+			return format;
 		}
 
 	}
 
-	private final static FormatBuilder JSON_FORMAT = new FormatBuilder() {
+	/**
+	 * JSON persistent format.
+	 */
+	private final static PersistenceFormat JSON_FORMAT = new PersistenceFormat() {
 
 		@Override
-		public <T> JsonProvider<T> create(String fileName) {
-			return new JsonProvider<T>(fileName);
+		public <T> JsonProvider<T> create(String fileName, Class<T> type) {
+			return new JsonProvider<T>(fileName, type);
 		}
 
 		@Override
@@ -46,11 +60,14 @@ public final class PersistenceFactory {
 
 	};
 
-	private final static FormatBuilder YAML_FORMAT = new FormatBuilder() {
+	/**
+	 * YAML persistent format.
+	 */
+	private final static PersistenceFormat YAML_FORMAT = new PersistenceFormat() {
 
 		@Override
-		public <T> YamlProvider<T> create(String fileName) {
-			return new YamlProvider<T>(fileName);
+		public <T> YamlProvider<T> create(String fileName, Class<T> type) {
+			return new YamlProvider<T>(fileName, type);
 		}
 
 		@Override
@@ -64,25 +81,66 @@ public final class PersistenceFactory {
 		}
 	};
 
-	public static <T> PersistenceProvider<T> create(PersistenceType type, String fileName) {
-		return type.getFormatConstructor().create(fileName);
+	/**
+	 * 
+	 * Tries to return a new instance of supported/registered PersistentProviders.
+	 * 
+	 * @param type
+	 *            of the supported persistence formats declared in
+	 *            {@link PersistenceFactory#PersistenceFormat} and registered in
+	 *            <code>providers</code> static Map.
+	 * 
+	 * @param fileName
+	 *            the name of the file where object will be persisted
+	 * @param objectType
+	 *            type of the persistent object
+	 * @return new instance of default PersistentProvider
+	 */
+	public static <T> PersistenceProvider<T> create(PersistenceType type, String fileName, Class<T> objectType) {
+		return type.getFormatConstructor().create(fileName, objectType);
 	}
 
-	public static final PersistenceProvider<?> getDefault(String fileName) throws PersistenceException {
+	/**
+	 * 
+	 * Tries to return a new instance of default PersistentProvider entry defined in
+	 * the application settings.
+	 * 
+	 * @param fileName
+	 *            the name of the file where object will be persisted
+	 * @param objectType
+	 *            type of the persistent object
+	 * @return new instance of default PersistentProvider
+	 * @throws PersistenceException
+	 *             there is no entry for default PersistentProvider in the
+	 *             application settings defined or the entry refers to unsupported
+	 *             or invalid provider.
+	 */
+	public static final <T> PersistenceProvider<T> getDefault(String fileName, Class<T> objectType)
+			throws PersistenceException {
 		final String providerClass = Settings.getPersistenceProvider();
-		final FormatBuilder constructor = constructors.get(providerClass);
+		final PersistenceFormat constructor = providers.get(providerClass);
 		if (Objects.isNull(constructor)) {
-			throw new PersistenceException(
-					new StringBuilder("Could not find a provider of type [").append(providerClass)
-							.append("] . Currently registered providers are ").append(constructors.values())
-							.append(". Please, check your configuration poroperties. ").toString());
+			throw new PersistenceException(new StringBuilder("Could not find a provider of type [")
+					.append(providerClass).append("] . Currently registered providers are ").append(printProviders())
+					.append(". Please, check your configuration poroperties. ").toString());
 		}
-		return constructor.create(fileName);
+		return constructor.create(fileName, objectType);
 	}
 
-	private static final Map<String, FormatBuilder> constructors = new HashMap<>();
+	/**
+	 * Map storage where supported PersistentProviders are registered.
+	 */
+	private static final Map<String, PersistenceFormat> providers = new HashMap<>();
 	static {
-		constructors.put(JSON_FORMAT.getClassName(), JSON_FORMAT);
-		constructors.put(YAML_FORMAT.getClassName(), YAML_FORMAT);
+		providers.put(JSON_FORMAT.getClassName(), JSON_FORMAT);
+		providers.put(YAML_FORMAT.getClassName(), YAML_FORMAT);
+	}
+
+	public static String printProviders() {
+		StringBuilder stringBuilder = new StringBuilder("{");
+		for (String className : providers.keySet()) {
+			stringBuilder.append(className).append(", ");
+		}
+		return stringBuilder.append("}").toString();
 	}
 }
