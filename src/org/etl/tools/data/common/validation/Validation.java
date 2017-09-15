@@ -15,7 +15,7 @@ public class Validation<K> extends AbstractValidation<K> {
 	}
 
 	@Override
-	public ValidationResult test(K param) {
-		return predicate.test(param) ? ValidationResult.ok() : ValidationResult.fail(onErrorMessage);
+	public ValidationResult<K> test(K param) {
+		return predicate.test(param) ? ValidationResult.ok(param) : ValidationResult.fail(param, onErrorMessage);
 	}
 }

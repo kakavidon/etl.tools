@@ -6,8 +6,18 @@ import org.etl.tools.data.common.validation.AbstractValidation;
 import org.etl.tools.data.common.validation.Predicate;
 import org.etl.tools.data.common.validation.Validation;
 
-public final class StringValidation {
-	public static AbstractValidation<String> notNull = Validation.from(new Predicate<String>() {
+public final class StringValidation<Z> extends ObjectValidation {
+
+	public static AbstractValidation<String> notEmpty() {
+		return Validation.from(new Predicate<String>() {
+			@Override
+			public boolean test(String s) {
+				return !s.isEmpty();
+			}
+		}, "must not be null.");
+	}
+
+	public static AbstractValidation<String> STR_NOT_NULL = Validation.from(new Predicate<String>() {
 		@Override
 		public boolean test(String s) {
 			return s != null;
@@ -44,4 +54,11 @@ public final class StringValidation {
 			}
 		}, format("must contain %s", c));
 	}
+	
+//	public static AbstractValidation<String> STR_NOT_NULLNOT_NULL = Validation.from(new Predicate<String>() {
+//		@Override
+//		public boolean test(String s) {
+//			return s != null;
+//		}
+//	}, "must not be null.");
 }

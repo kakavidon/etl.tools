@@ -1,18 +1,20 @@
 package org.etl.tools.data.common.validation;
 
-public final class ValidationResult {
+public final class ValidationResult<T> {
 	private boolean valid;
 	private String messsage;
+	private T testedObject;
 
-	public static ValidationResult ok() {
-		return new ValidationResult(true, null);
+	public static <T> ValidationResult<T> ok(T testedObject) {
+		return new ValidationResult<T>(testedObject, true, null);
 	}
 
-	public static ValidationResult fail(String message) {
-		return new ValidationResult(false, message);
+	public static <T> ValidationResult<T> fail(T testedObject, String message) {
+		return new ValidationResult<T>(testedObject, false, message);
 	}
 
-	private ValidationResult(boolean valid, String messsage) {
+	private ValidationResult(T testedObject, boolean valid, String messsage) {
+		this.testedObject = testedObject;
 		this.valid = valid;
 		this.messsage = messsage;
 	}
@@ -21,17 +23,23 @@ public final class ValidationResult {
 		return valid;
 	}
 
-	public void throwIfInvalid() {
-		if (!isValid())
+	public T throwIfInvalid() {
+		if (!isValid()) {
 			throw new IllegalArgumentException(getMesssage());
+		}
+		return this.testedObject;
 	}
 
-	public void throwIfInvalid(String fieldName) {
-		if (!isValid())
+	public T throwIfInvalid(String fieldName) {
+		if (!isValid()) {
 			throw new IllegalArgumentException(fieldName + " : " + getMesssage());
+		}
+		return this.testedObject;
 	}
 
 	public String getMesssage() {
 		return messsage;
 	}
+
+
 }
