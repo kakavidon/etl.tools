@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import org.etl.tools.data.generation.model.IntegerModel;
 import org.etl.tools.data.generation.model.generators.ValueFactory;
 
 public final class Utils {
@@ -42,7 +41,7 @@ public final class Utils {
 
 		public IntegerValidator notNull() {
 			if (from == null) {
-				throw new IllegalStateException("Value should not be null.");
+				throw new IllegalArgumentException("Value should not be null.");
 			}
 			return this;
 		}
@@ -61,7 +60,7 @@ public final class Utils {
 			try {
 				Integer.parseInt(string);
 			} catch (NumberFormatException e) {
-				throw new IllegalStateException(String.format("Value should not be a valid digit between %d and %d.",
+				throw new IllegalArgumentException(String.format("Value should not be a valid digit between %d and %d.",
 						Integer.MIN_VALUE, Integer.MAX_VALUE));
 			}
 			return this;
@@ -73,7 +72,7 @@ public final class Utils {
 			}
 
 			if (from >= to) {
-				throw new IllegalStateException(
+				throw new IllegalArgumentException(
 						String.format("From value[%d] should be greater than to value [%d].", from, to));
 			}
 			return this;
@@ -97,7 +96,7 @@ public final class Utils {
 				return this;
 			}
 			if (otherValue.compareTo(getValue()) == -1) {
-				throw new IllegalStateException("To Value should be less than from value.");
+				throw new IllegalArgumentException("To Value should be less than from value.");
 			}
 			return this;
 
@@ -109,19 +108,19 @@ public final class Utils {
 				return this;
 			}
 			if (otherValue.compareTo(getValue()) == 1) {
-				throw new IllegalStateException("From Value should  be greater than to value.");
+				throw new IllegalArgumentException("From Value should  be greater than to value.");
 			}
 			return this;
 		}
 
 		@Override
-		protected void inTypeRange(BigInteger value) throws IllegalStateException {
+		protected void inTypeRange(BigInteger value) throws IllegalArgumentException {
 			final BigInteger min = BigInteger.valueOf(Integer.MIN_VALUE * Integer.MIN_VALUE);
 			final BigInteger max = BigInteger.valueOf(Integer.MAX_VALUE * Integer.MAX_VALUE);
 
 			if (value.compareTo(max) == 1 || value.compareTo(min) == -1) {
 				final String message = String.format("Value[%d] should be in [%d ,%d].", value, min, max);
-				throw new IllegalStateException(message);
+				throw new IllegalArgumentException(message);
 			}
 
 		}
@@ -135,13 +134,13 @@ public final class Utils {
 		}
 
 		@Override
-		protected void inTypeRange(BigInteger value) throws IllegalStateException {
+		protected void inTypeRange(BigInteger value) throws IllegalArgumentException {
 			final BigInteger min = BigInteger.valueOf(Integer.MIN_VALUE * Integer.MIN_VALUE);
 			final BigInteger max = BigInteger.valueOf(Integer.MAX_VALUE * Integer.MAX_VALUE);
 
 			if (value.compareTo(max) == 1 || value.compareTo(min) == -1) {
 				final String message = String.format("Value[%d] should be in [%d ,%d].", value, min, max);
-				throw new IllegalStateException(message);
+				throw new IllegalArgumentException(message);
 			}
 
 		}
@@ -152,7 +151,7 @@ public final class Utils {
 				return this;
 			}
 			if (otherValue.compareTo(getValue()) == -1) {
-				throw new IllegalStateException("To Value should be less than from value.");
+				throw new IllegalArgumentException("To Value should be less than from value.");
 			}
 			return this;
 
@@ -164,7 +163,7 @@ public final class Utils {
 				return this;
 			}
 			if (otherValue.compareTo(getValue()) == 1) {
-				throw new IllegalStateException("From Value should  be greater than to value.");
+				throw new IllegalArgumentException("From Value should  be greater than to value.");
 			}
 			return this;
 		}
@@ -178,13 +177,13 @@ public final class Utils {
 		}
 
 		@Override
-		protected void inTypeRange(BigInteger value) throws IllegalStateException {
+		protected void inTypeRange(BigInteger value) throws IllegalArgumentException {
 			final BigInteger min = BigInteger.valueOf(Short.MIN_VALUE);
 			final BigInteger max = BigInteger.valueOf(Short.MAX_VALUE);
 
 			if (value.compareTo(max) == 1 || value.compareTo(min) == -1) {
 				final String message = String.format("Value[%d] should be in [%d ,%d].", value, min, max);
-				throw new IllegalStateException(message);
+				throw new IllegalArgumentException(message);
 			}
 
 		}
@@ -195,7 +194,7 @@ public final class Utils {
 				return this;
 			}
 			if (otherValue <= getValue()) {
-				throw new IllegalStateException("To Value should  be less than from value.");
+				throw new IllegalArgumentException("To Value should  be less than from value.");
 			}
 			return this;
 		}
@@ -206,7 +205,7 @@ public final class Utils {
 				return this;
 			}
 			if (otherValue >= getValue()) {
-				throw new IllegalStateException("From Value should  be greater than to value.");
+				throw new IllegalArgumentException("From Value should  be greater than to value.");
 			}
 			return this;
 		}
@@ -222,7 +221,7 @@ public final class Utils {
 
 		public StringValidator notNull() {
 			if (value == null) {
-				throw new IllegalStateException("Value should not be null.");
+				throw new IllegalArgumentException("Value should not be null.");
 			}
 			return this;
 		}
@@ -232,7 +231,7 @@ public final class Utils {
 				return this;
 			}
 			if (value.trim().isEmpty()) {
-				throw new IllegalStateException("Value should not be empty or should not only spaces.");
+				throw new IllegalArgumentException("Value should not be empty or should not only spaces.");
 			}
 			return this;
 		}
@@ -242,7 +241,7 @@ public final class Utils {
 				return this;
 			}
 			if (value.length() < min || value.length() > max) {
-				throw new IllegalStateException(
+				throw new IllegalArgumentException(
 						String.format("Value should be between %d and %d characters in length.", min, max));
 			}
 			return this;
@@ -257,7 +256,7 @@ public final class Utils {
 				return this;
 			}
 			if (value.trim().length() < min) {
-				throw new IllegalStateException(String.format("Value should be longer than %d.", min));
+				throw new IllegalArgumentException(String.format("Value should be longer than %d.", min));
 			}
 			return this;
 
@@ -268,7 +267,7 @@ public final class Utils {
 				return this;
 			}
 			if (!allowedValues.contains(value)) {
-				throw new IllegalStateException(String.format("Value \"%s\" is invalid attribute.", value));
+				throw new IllegalArgumentException(String.format("Value \"%s\" is invalid attribute.", value));
 			}
 			return this;
 
@@ -288,7 +287,7 @@ public final class Utils {
 
 		public Validator notNull() {
 			if (value == null) {
-				throw new IllegalStateException("Value should not be null.");
+				throw new IllegalArgumentException("Value should not be null.");
 			}
 			return this;
 		}
@@ -313,7 +312,7 @@ public final class Utils {
 
 		public BooleanValidator notNull() {
 			if (value == null) {
-				throw new IllegalStateException("Value should not be null.");
+				throw new IllegalArgumentException("Value should not be null.");
 			}
 			return this;
 		}
@@ -326,7 +325,7 @@ public final class Utils {
 			final List<String> bools = Arrays.asList("true", "false");
 			final String string = value.toString().toLowerCase();
 			if (!bools.contains(string)) {
-				throw new IllegalStateException("Value should not be true or false.");
+				throw new IllegalArgumentException("Value should not be true or false.");
 			}
 			return this;
 		}
@@ -371,7 +370,7 @@ public final class Utils {
 
 	public static void main(String[] args) {
 		ValueFactory.init();
-		final IntegerModel integerModel = new IntegerModel("PEdko");
+//		final IntegerModel integerModel = new IntegerModel("PEdko");
 //		// integerModel.setConstantValue(100);
 //		integerModel.setDefaultValue(20);
 //		integerModel.setNullable(true);

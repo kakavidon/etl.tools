@@ -6,7 +6,7 @@ import org.etl.tools.data.common.validation.AbstractValidation;
 import org.etl.tools.data.common.validation.Predicate;
 import org.etl.tools.data.common.validation.Validation;
 
-public final class StringValidation<Z> extends ObjectValidation {
+public final class StringValidation{
 
 	public static AbstractValidation<String> notEmpty() {
 		return Validation.from(new Predicate<String>() {

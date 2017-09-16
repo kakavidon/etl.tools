@@ -1,15 +1,8 @@
 package org.etl.tools.data.common.validation.utils;
 
 import static java.lang.String.format;
-import static org.etl.tools.data.common.validation.utils.IntegerValidation.INT_IS_NULL;
-import static org.etl.tools.data.common.validation.utils.IntegerValidation.greaterThan;
-import static org.etl.tools.data.common.validation.utils.IntegerValidation.lowerThan;
 
 import org.etl.tools.data.common.validation.AbstractValidation;
-import org.etl.tools.data.common.validation.AllowNullValidation;
-import org.etl.tools.data.common.validation.BiAbstractValidation;
-import org.etl.tools.data.common.validation.BiPredicate;
-import org.etl.tools.data.common.validation.BiValidation;
 import org.etl.tools.data.common.validation.Predicate;
 import org.etl.tools.data.common.validation.Validation;
 
@@ -105,34 +98,7 @@ public final class IntegerValidation {
 		}
 	}, "must not be null.");
 
-	public static AbstractValidation<Integer> INT_IS_NULL = AllowNullValidation.from(new Predicate<Integer>() {
-		@Override
-		public boolean test(Integer s) {
-			return s != null;
-		}
-	});
 
-	public static BiAbstractValidation<Integer, Integer> boundaryCheck() {
-
-		return BiValidation.from(new BiPredicate<Integer, Integer>() {
-			@Override
-			public boolean test(Integer s, Integer t) {
-				return s < t;
-			}
-		}, "To value shoud be greater than from.");
-	}
-
-	public static BiAbstractValidation<Integer, Integer> INT_BOTH_NOT_NULL = BiValidation
-			.from(new BiPredicate<Integer, Integer>() {
-				@Override
-				public boolean test(Integer s, Integer t) {
-					return s != null && t != null;
-				}
-			}, "must both be null.");
-	
-	public static Integer parseInteger(final Integer value) {
-		return INT_IS_NULL.or(lowerThan(Integer.MIN_VALUE).and(greaterThan(Integer.MAX_VALUE))).test(value).throwIfInvalid();
-	}
 
 
 }

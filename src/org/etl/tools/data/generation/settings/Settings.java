@@ -2,9 +2,9 @@ package org.etl.tools.data.generation.settings;
 
 public final class Settings {
 	
-	private static final String SETTINGS_UI_MAIN_CALSS = "Settings.ui.main.calss";
-	private static final String SETTINGS_APPLICATION_TYPE = "Settings.application.type";
-	private static final String SETTINGS_PERSISTENCE_PROVIDER = "Settings.persistence.provider";
+	private static final String SETTINGS_UI_MAIN_CALSS = "Settings.application.type";
+	private static final String SETTINGS_APPLICATION_TYPE = "Settings.application.type"; 
+	private static final String SETTINGS_PERSISTENCE_PROVIDER = "Settings.persictence.provider"; 
 	
 	private static final String persistenceProvider = SettingsRecources.getString(SETTINGS_PERSISTENCE_PROVIDER);
 	private static final String applicationType = SettingsRecources.getString(SETTINGS_APPLICATION_TYPE);
